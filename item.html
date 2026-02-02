@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Practice Quiz</title>
+    <style>
+        /* CSS: Styles for the page layout */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        
+        h2 { color: #2c3e50; }
+        
+        /* The Question Text */
+        #question-text { font-size: 1.2em; margin-bottom: 20px; font-weight: bold; }
+        
+        input { padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: #007bff; }
+        
+        button { padding: 12px 24px; margin-top: 15px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #0056b3; }
+        
+        /* Different button colors */
+        #next-btn { background-color: #28a745; display: none; } /* Green for next */
+        #next-btn:hover { background-color: #218838; }
+
+        /* The Result Area */
+        #result-area { margin-top: 20px; display: none; border-top: 1px solid #eee; padding-top: 20px; }
+        #work-image { max-width: 100%; border-radius: 8px; border: 2px solid #333; margin-top: 10px; }
+        
+        .correct-text { color: #28a745; font-weight: bold; font-size: 1.1em; }
+        .wrong-text { color: #dc3545; font-weight: bold; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2 id="quiz-title">Problem 1</h2>
+        <p id="question-text">Loading question...</p>
+        
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Enter your answer...">
+            <br>
+            <button onclick="checkAnswer()" id="check-btn">Check Answer</button>
+            <p id="error-msg" class="wrong-text">Not quite! Try again.</p>
+        </div>
+
+        <div id="result-area">
+            <p class="correct-text">Correct! Here is how to solve it:</p>
+            <img id="work-image" src="" alt="Solution Work">
+            <br>
+            <button onclick="nextQuestion()" id="next-btn">Next Question ➡</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        //  TEACHER ZONE: EDIT THIS LIST BELOW
+        // ============================================
+        // Format: answer: ["option1", "option2", "option3"]
+        // Important: Use lowercase text inside the quotes!
+        
+        const questions = [
+            {
+                text: "What is 5 + 5?",
+                answer: ["10", "ten", "10.0"], 
+                image: "q1.jpg" 
+            },
+            {
+                text: "Solve for x: 2x = 20",
+                answer: ["10", "x=10", "x = 10"], 
+                image: "q2.jpg"
+            },
+            {
+                text: "What is the square root of 81?",
+                answer: ["9", "nine", "+-9", "±9"],
+                image: "q3.jpg"
+            }
+        ];
+        
+        // ============================================
+        //  END TEACHER ZONE (Logic below)
+        // ============================================
+
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            // Reset the view for a new question
+            const q = questions[currentQuestionIndex];
+            document.getElementById("quiz-title").innerText = "Problem " + (currentQuestionIndex + 1);
+            document.getElementById("question-text").innerText = q.text;
+            document.getElementById("user-input").value = "";
+            document.getElementById("result-area").style.display = "none";
+            document.getElementById("input-area").style.display = "block";
+            document.getElementById("error-msg").style.display = "none";
+            document.getElementById("next-btn").style.display = "none";
+        }
+
+        function checkAnswer() {
+            // 1. Get user input, lowercased, with ALL spaces removed
+            const rawInput = document.getElementById("user-input").value;
+            const cleanInput = rawInput.toLowerCase().replace(/\s/g, '');
+            
+            // 2. Get accepted answers list
+            const acceptedAnswers = questions[currentQuestionIndex].answer;
+
+            // 3. Check if cleanInput matches any of the accepted answers (also cleaned)
+            const isCorrect = acceptedAnswers.some(ans => {
+                const cleanAns = ans.toLowerCase().replace(/\s/g, '');
+                return cleanAns === cleanInput;
+            });
+
+            if (isCorrect) {
+                // Correct! Show image and next button
+                document.getElementById("input-area").style.display = "none";
+                document.getElementById("result-area").style.display = "block";
+                
+                // Set the image source
+                document.getElementById("work-image").src = questions[currentQuestionIndex].image;
+
+                // Determine if we show "Next" or "Finish"
+                if (currentQuestionIndex < questions.length - 1) {
+                    const btn = document.getElementById("next-btn");
+                    btn.style.display = "inline-block";
+                    btn.innerText = "Next Question ➡";
+                    btn.onclick = nextQuestion;
+                } else {
+                    // Quiz Finished
+                    const btn = document.getElementById("next-btn");
+                    btn.style.display = "inline-block";
+                    btn.innerText = "Finish Quiz 🎉";
+                    btn.onclick = function() { alert("Great job! You finished all the problems."); };
+                }
+
+            } else {
+                // Wrong
+                document.getElementById("error-msg").style.display = "block";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        // Initialize the first question on page load
+        loadQuestion();
+    </script>
+
+</body>
+</html>
