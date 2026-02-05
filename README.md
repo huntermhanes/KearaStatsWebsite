@@ -1,2 +1,2 @@
-# KearaStatQuiz
-html file to allow for checking work on stats hw
+# KearaStatsWebsite
+html file for Keara to checking work on stats hw
