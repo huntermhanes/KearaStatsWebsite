@@ -3,41 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solution Viewer</title>
+    <title>Stats Homework Viewer</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; flex-direction: column; }
+        /* CSS: Styles for the page layout */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #e9ecef; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            flex-direction: column; 
+        }
         
         .card { 
             background: white; 
-            padding: 2rem; 
+            padding: 1rem; 
             border-radius: 15px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            width: 90%; 
-            max-width: 800px; 
+            
+            /* --- WIDESCREEN SETTINGS --- */
+            width: 95%;           /* Uses almost full width of screen */
+            max-width: 1200px;    /* Stops getting wider on huge monitors */
+            height: 90vh;         /* Uses 90% of the screen height */
+            /* --------------------------- */
+
             text-align: center; 
+            display: flex;
+            flex-direction: column;
         }
 
-        h2 { color: #2c3e50; margin-bottom: 10px; }
+        h2 { 
+            color: #2c3e50; 
+            margin: 5px 0 15px 0; 
+        }
         
         /* The PDF Window */
         #pdf-frame {
             width: 100%;
-            height: 600px; /* Adjust this number to make the window taller/shorter */
-            border: 1px solid #ddd;
+            flex-grow: 1; /* This forces the PDF to fill all empty space */
+            border: 1px solid #ccc;
             border-radius: 8px;
-            margin-top: 15px;
+            background-color: #f8f9fa;
         }
 
         /* Navigation Buttons */
         .nav-container {
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
             justify-content: center;
             gap: 15px;
+            padding-bottom: 5px;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 12px 25px;
             background-color: #007bff;
             color: white;
             border: none;
@@ -45,6 +66,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: 0.2s;
+            font-weight: bold;
         }
 
         button:hover { background-color: #0056b3; }
@@ -52,7 +74,7 @@
 
         .download-link {
             display: block;
-            margin-top: 15px;
+            margin-top: 10px;
             color: #6c757d;
             text-decoration: none;
             font-size: 0.9em;
@@ -64,21 +86,22 @@
 <body>
 
     <div class="card">
-        <h2 id="title">Problem 1</h2>
+        <h2 id="title">Assignment 1</h2>
 
         <iframe id="pdf-frame" src=""></iframe>
         
-        <a id="download-link" class="download-link" href="#" target="_blank">Download this PDF</a>
-
         <div class="nav-container">
             <button id="prev-btn" onclick="changeFile(-1)">⬅ Previous</button>
             <button id="next-btn" onclick="changeFile(1)">Next ➡</button>
         </div>
+
+        <a id="download-link" class="download-link" href="#" target="_blank">Download this PDF</a>
     </div>
 
     <script>
         // ============================================
         //  TEACHER ZONE: LIST YOUR PDF FILES HERE
+        //  (Make sure these match your filenames exactly!)
         // ============================================
         const pdfFiles = [
             "statshelp.pdf",
@@ -91,7 +114,7 @@
 
         function updateViewer() {
             // Update Title
-            document.getElementById("title").innerText = "Problem " + (currentIndex + 1);
+            document.getElementById("title").innerText = "Assignment " + (currentIndex + 1);
             
             // Get current file
             const currentFile = pdfFiles[currentIndex];
@@ -100,7 +123,7 @@
             document.getElementById("pdf-frame").src = currentFile;
             document.getElementById("download-link").href = currentFile;
 
-            // Handle Button States (Disable "Prev" if at start, "Next" if at end)
+            // Handle Button States
             document.getElementById("prev-btn").disabled = (currentIndex === 0);
             document.getElementById("next-btn").disabled = (currentIndex === pdfFiles.length - 1);
         }
